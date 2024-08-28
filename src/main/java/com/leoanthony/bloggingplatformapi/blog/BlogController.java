@@ -1,5 +1,8 @@
 package com.leoanthony.bloggingplatformapi.blog;
 
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -33,5 +36,27 @@ public class BlogController {
         newBlog.setUpdatedAt(now);
 
         return blogRepository.save(newBlog);
+    }
+
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<Blog> updateBlog(
+            @RequestBody BlogRequestBody blog,
+            @PathVariable Long id
+    ){
+        LocalDateTime now = LocalDateTime.now();
+
+        int res = blogRepository.updateBlog(
+                id,
+                blog.title(),
+                blog.content(),
+                blog.category(),
+                blog.tags(),
+                now
+        );
+
+        if (res > 0) {
+            return new ResponseEntity<>(blogRepository.findById(id).get(), HttpStatus.OK);
+        }
+       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
