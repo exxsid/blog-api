@@ -1,6 +1,5 @@
 # Blogging Platform REST API
 
----
 A Spring Boot RESTful API with basic CRUD operations for personal blogging.
 
 ## Tech Stack
