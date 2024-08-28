@@ -30,4 +30,8 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
             @Param("tags") List<String> tags,
             @Param("updatedAt")LocalDateTime updatedAt
             );
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Blog b WHERE b.id = :id")
+    int deleteBlog(@Param("id") Long id);
 }

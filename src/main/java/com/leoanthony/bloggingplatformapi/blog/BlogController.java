@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class BlogController {
@@ -59,4 +60,27 @@ public class BlogController {
         }
        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<Blog> deleteBlog(
+            @PathVariable Long id
+    ) {
+        try {
+            // get the blog before deleting the record
+            Blog blog = blogRepository.findById(id).get();
+            if (blog == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            int res = blogRepository.deleteBlog(id);
+            if (res < 1) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(blog, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 }
