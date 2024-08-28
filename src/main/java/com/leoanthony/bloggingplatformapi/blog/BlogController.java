@@ -19,8 +19,14 @@ public class BlogController {
     }
 
     @GetMapping("/posts")
-    public List<Blog> getBlogs() {
-        return blogRepository.findAll();
+    public ResponseEntity<List<Blog>> getBlogs(
+            @RequestParam(required = false) String term
+    ) {
+        if (term != null) {
+            List<Blog> blogs = blogRepository.searchTerm(term);
+            return new ResponseEntity<>(blogs, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(blogRepository.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/posts")

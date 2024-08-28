@@ -34,4 +34,11 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     @Modifying
     @Query("DELETE FROM Blog b WHERE b.id = :id")
     int deleteBlog(@Param("id") Long id);
+
+
+    @Query("SELECT b FROM Blog b " +
+            "WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+            "LOWER(b.content) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+            "LOWER(b.category) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Blog> searchTerm(@Param("term") String term);
 }
